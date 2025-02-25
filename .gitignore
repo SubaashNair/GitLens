@@ -1,0 +1,30 @@
+# Environment variables
+.env
+.env.local
+
+# Virtual environment
+venv/
+githubAnalyzer/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
