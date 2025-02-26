@@ -1,3 +1,9 @@
+---
+title: GitLens
+app_file: main.py
+sdk: gradio
+sdk_version: 5.16.2
+---
 <!-- # GitLens
 
 ![GitLens Logo](https://img.icons8.com/color/452/git.png)

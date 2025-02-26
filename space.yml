@@ -1,0 +1,9 @@
+title: GitLens
+emoji: 🔍
+colorFrom: blue
+colorTo: indigo
+sdk: gradio
+sdk_version: 3.44.4
+app_file: main.py
+pinned: false
+license: mit

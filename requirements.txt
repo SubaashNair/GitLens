@@ -7,3 +7,7 @@ bitsandbytes>=0.41.0
 safetensors>=0.4.0
 requests>=2.31.0
 python-dotenv>=1.0.0
+networkx>=3.0
+# pygraphviz>=1.10  # Optional, for better visualization
+matplotlib>=3.6.0  # For dependency graph visualization
+chardet>=5.0.0  # For better file encoding detection
