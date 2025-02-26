@@ -227,12 +227,12 @@ class DependencyAnalyzer:
         ]
 
         # Find isolated files (not importing or imported by others)
-        isolated_files = [
-            file
-            for file in file_contents.keys()
-            if (file not in imports or not imports[file])
-            and (file not in imported_by or not imported_by[file])
-        ]
+        isolated_files = []
+        for file in file_contents.keys():
+            file_has_imports = file in imports and imports[file]
+            file_is_imported = file in imported_by and imported_by[file]
+            if not file_has_imports and not file_is_imported:
+                isolated_files.append(file)
 
         # Compute dependency metrics
         try:

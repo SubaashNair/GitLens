@@ -1,12 +1,16 @@
-gradio==5.16.2
-PyGithub>=1.58.2
+# Core dependencies
+gradio>=4.13.0,<6.0.0
 requests>=2.31.0
 python-dotenv>=1.0.0
 networkx>=3.0
 matplotlib>=3.6.0  # For dependency graph visualization
 chardet>=5.0.0  # For better file encoding detection
-pytest>=7.0.0
-pytest-cov>=4.0.0
-ruff>=0.0.270
+PyGithub>=1.58.2
+
+# Test dependencies (not needed for deployment)
+# pytest>=7.0.0
+# pytest-cov>=4.0.0
+# ruff>=0.0.270
+
 # Optional for better visualization
 # pygraphviz>=1.10
