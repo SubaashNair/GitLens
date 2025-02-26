@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import patch, MagicMock
 import sys
 import os
+import time
 
 # Add the parent directory to the path so we can import the app modules
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -20,6 +21,19 @@ class TestAnalyzer(unittest.TestCase):
         rate_limit_response.status_code = 403
         rate_limit_response.text = "API rate limit exceeded"
         
+        # Mock for rate_info response
+        rate_info_response = MagicMock()
+        rate_info_response.status_code = 200
+        rate_info_response.json.return_value = {
+            "resources": {
+                "core": {
+                    "limit": 60,
+                    "remaining": 0,
+                    "reset": int(time.time()) + 60
+                }
+            }
+        }
+        
         success_response = MagicMock()
         success_response.status_code = 200
         success_response.json.return_value = {
@@ -30,17 +44,21 @@ class TestAnalyzer(unittest.TestCase):
         }
         
         # Configure the mock to return different responses on consecutive calls
-        mock_get.side_effect = [rate_limit_response, success_response, success_response]
+        # This accounts for initial API call, rate info call, and retry
+        mock_get.side_effect = [rate_limit_response, rate_info_response, success_response, success_response]
         
-        # This should normally raise an exception, but we'll mock it for testing
+        # Mock multiple dependencies to isolate the test
         with patch('app.analyzer.time.sleep', return_value=None):
             with patch('app.analyzer.get_folder_structure_with_contents', return_value=("folder structure", {})):
-                try:
-                    result = analyze_repo("https://github.com/test/repo", max_file_size=1000, file_limit=5)
-                    self.assertIn("folder_structure", result)
-                    self.assertIn("frameworks", result)
-                except Exception as e:
-                    self.fail(f"analyze_repo raised exception {e} when it should have handled rate limits")
+                with patch('app.utils.get_cached_repository_data', return_value=None):
+                    with patch('app.utils.cache_repository_data'):
+                        with patch('app.utils.cache_file_content'):
+                            try:
+                                result = analyze_repo("https://github.com/test/repo", max_file_size=1000, file_limit=5)
+                                self.assertIn("folder_structure", result)
+                                self.assertIn("frameworks", result)
+                            except Exception as e:
+                                self.fail(f"analyze_repo raised exception {e} when it should have handled rate limits")
 
     def test_identify_frameworks(self):
         """Test that frameworks are correctly identified from folder structure"""
